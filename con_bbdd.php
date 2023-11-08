@@ -1,12 +1,9 @@
 <?php
-    $_servidor = 'localhost';
-    $_usuario = 'root';
-    $_contrasena = '123456789';
-    $_base_de_datos = 'videojuegos';
+        $servername = "localhost";
+        $username = "root";
+        $password = "123456789";
+        $dbname = "amazon";
 
-    $conexion = new Mysqli($_servidor, 
-                            $_usuario, 
-                            $_contrasena, 
-                            $_base_de_datos)
+    $conexion = new Mysqli($servername, $username, $password, $dbname)
         or die("Error de conexión");
 ?>

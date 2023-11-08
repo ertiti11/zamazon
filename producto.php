@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Formulario de Producto</title>
+    <?php require './css.php' ?>
 </head>
 <body>
     <h2>Formulario para Agregar un Nuevo Producto</h2>
