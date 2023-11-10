@@ -12,6 +12,7 @@
         //comprobar si ha iniciado sesion y si no pues le pondremos la sesion con valor a invitado y un boton de login y si ha iniciado le pondremos un boton de logout
         if(isset($_SESSION["usuario"])){
             echo '<a href="./logout.php">Logout</a>';
+            echo '<a href="./producto.php">Añadir producto</a>';
         }else{
             echo '<a href="./login.php">Login</a>';
         }

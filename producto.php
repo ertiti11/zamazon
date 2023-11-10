@@ -1,3 +1,13 @@
+<?php 
+        session_start();
+    
+        //comprobar si ha iniciado sesion y si no pues le pondremos la sesion con valor a invitado y un boton de login y si ha iniciado le pondremos un boton de logout
+        if(isset($_SESSION["usuario"])){
+            echo '<a href="./logout.php">Logout</a>';
+        }else{
+            header("Location: ./login.php");
+        }
+    ?>
 <!DOCTYPE html>
 <html>
 <head>
