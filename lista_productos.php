@@ -7,7 +7,10 @@
 </head>
 
 <body>
-    <?php require './components/navbar.php' ?>
+
+    <?php
+    session_start();
+    require './components/navbar.php' ?>
     <h2 class="text-center my-5">Lista de Productos</h2>
 
     <div style="display: flex; justify-content:center; align-items:center">
