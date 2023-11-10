@@ -9,17 +9,7 @@
 <body>
     <?php require './components/navbar.php' ?>
     <h2>Lista de Productos</h2>
-    <?php
-    session_start();
 
-    //comprobar si ha iniciado sesion y si no pues le pondremos la sesion con valor a invitado y un boton de login y si ha iniciado le pondremos un boton de logout
-    if (isset($_SESSION["usuario"])) {
-        echo '<a href="./logout.php">Logout</a>';
-        echo '<a href="./producto.php">Añadir producto</a>';
-    } else {
-        echo '<a href="./login.php">Login</a>';
-    }
-    ?>
     <ul>
         <?php
         require './con_bbdd.php';
