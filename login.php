@@ -24,6 +24,12 @@
   }
 </style>
 <?php
+session_start();
+
+if (isset($_SESSION["usuario"])) {
+  header("location: lista_productos.php");
+} 
+
 require './con_bbdd.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $usuario = ($_POST["usuario"]);
