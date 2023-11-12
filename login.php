@@ -49,8 +49,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $acceso_valido = password_verify($password, $password_cifrada);
 
     if ($acceso_valido) {
-      session_start();
       $_SESSION["usuario"] = $usuario;
+      $usuario = $_SESSION["usuario"];
+
+      // Verificar si el usuario ya tiene una cesta
+      $sql_check_cesta = "SELECT * FROM cestas WHERE usuario = '$usuario'";
+      $result_check_cesta = $conexion->query($sql_check_cesta);
+  
+      if ($result_check_cesta->num_rows == 0) {
+          // El usuario no tiene una cesta, por lo tanto, se crea una cesta vacía
+          $sql_crear_cesta = "INSERT INTO cestas (usuario) VALUES ('$usuario')";
+          if ($conexion->query($sql_crear_cesta) === TRUE) {
+              echo "Se ha adjuntado una cesta vacía al iniciar sesión.";
+          } else {
+              echo "Error al crear la cesta: " . $conexion->error;
+          }
+      }
       header('location: lista_productos.php');
     } else {
       $error = "El usuario/contraseña son incorrectos";
