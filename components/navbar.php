@@ -4,7 +4,7 @@
 //comprobar si ha iniciado sesion y si no pues le pondremos la sesion con valor a invitado y un boton de login y si ha iniciado le pondremos un boton de logout
 if (isset($_SESSION["usuario"])) {
     $logout =  '<a class="btn btn-primary" href="/logout">Logout</a>';
-    $producto = '<li class="active"><a class="nav-link active" href="/producto">añadir producto</a></li>';
+    $producto = '<li class="active"><a class="nav-link active" href="/nuevo_producto">añadir producto</a></li>';
 } else {
     $login = '<a class="btn btn-primary" href="/login">Login</a>';
 }
