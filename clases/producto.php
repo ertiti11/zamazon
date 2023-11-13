@@ -41,7 +41,7 @@ class Producto
             throw new Exception("Error al guardar la imagen.");
         }
 
-        $sql = "INSERT INTO producto (nombre_producto, precio, descripcion, cantidad, imagen) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO productos (nombre_producto, precio, descripcion, cantidad, imagen) VALUES (?, ?, ?, ?, ?)";
 
         $stmt = $this->conexion->prepare($sql);
         $stmt->bind_param("sdsss", $this->nombre_producto, $this->precio, $this->descripcion, $this->cantidad, $imagen_guardada);

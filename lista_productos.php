@@ -11,13 +11,13 @@
     <?php
     session_start();
     require './components/navbar.php';
-    require './con_bbdd.php';
+    require './bd/con_bbdd.php';
     require './clases/producto.php';
 
     // Obtener la lista de productos usando la clase Producto
     $productos = array(); // Arreglo para almacenar los objetos Producto
 
-    $sql = "SELECT * FROM producto";
+    $sql = "SELECT * FROM productos";
     $result = $conexion->query($sql);
 
     if ($result->num_rows > 0) {

@@ -27,10 +27,10 @@
 session_start();
 
 if (isset($_SESSION["usuario"])) {
-  header("location: lista_productos.php");
+  header("location: /lista_productos.php");
 } 
 
-require './con_bbdd.php';
+require './bd/con_bbdd.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $usuario = ($_POST["usuario"]);
   $password = ($_POST["password"]);

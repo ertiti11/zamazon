@@ -10,7 +10,7 @@ $error = '';
 $succesfull = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    require 'con_bbdd.php'; 
+    require './bd/con_bbdd.php'; 
     require 'clases/producto.php'; 
     $producto = new Producto($conexion);
     $nombre = sanitizeInput($_POST["nombre"]);

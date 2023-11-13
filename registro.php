@@ -4,27 +4,17 @@
         $passwordHash = password_hash($_POST["password"], PASSWORD_DEFAULT);
         $fechaNacimiento = $_POST["fechaNacimiento"];
 
-        // Conecta a la base de datos y realiza la inserción de datos en la tabla Usuario
-        $servername = "localhost";
-        $username = "root";
-        $password = "123456789";
-        $dbname = "amazon";
-
-        $conn = new mysqli($servername, $username, $password, $dbname);
-
-        if ($conn->connect_error) {
-            die("Error de conexión: " . $conn->connect_error);
-        }
+        require './bd/con_bbdd.php';
 
         $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES ('$usuario', '$passwordHash', '$fechaNacimiento')";
 
-        if ($conn->query($sql) === TRUE) {
+        if ($conexion->query($sql) === TRUE) {
             echo "Usuario agregado con éxito.";
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "Error: " . $sql . "<br>" . $conexion->error;
         }
 
-        $conn->close();
+        $conexion->close();
     }
     ?>
 <!DOCTYPE html>
