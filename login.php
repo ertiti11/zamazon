@@ -35,14 +35,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $usuario = ($_POST["usuario"]);
   $password = ($_POST["password"]);
   $error;
-  $sql = "SELECT usuario, contrasena FROM usuarios WHERE usuario = '$usuario'";
-  $resultado = $conexion->query($sql);
+  // Utilizar una consulta preparada para evitar inyección SQL
+  $stmt = $conexion->prepare("SELECT usuario, contrasena FROM usuarios WHERE usuario = ?");
+  $stmt->bind_param("s", $usuario);
+  $stmt->execute();
+  $result = $stmt->get_result();
 
-  if ($resultado->num_rows === 0) {
+  if ($result->num_rows === 0) {
     $error = "El usuario/contraseña son incorrectos";
   } else {
-
-    while ($fila = $resultado->fetch_assoc()) { //coje una tabla y cada fila la transforma en una array
+    while ($fila = $result->fetch_assoc()) {
       $password_cifrada = $fila["contrasena"];
     }
 
