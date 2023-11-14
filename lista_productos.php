@@ -17,7 +17,7 @@
     // Obtener la lista de productos usando la clase Producto
     $productos = array(); // Arreglo para almacenar los objetos Producto
 
-    $sql = "SELECT * FROM productos";
+    $sql = "SELECT * FROM PRODUCTOS";
     $result = $conexion->query($sql);
 
     if ($result->num_rows > 0) {
@@ -25,7 +25,7 @@
             // Crear un objeto Producto por cada registro
             $producto = new Producto($conexion);
             $producto->crearProducto(
-                $row["nombre_producto"],
+                $row["nombreProducto"],
                 $row["precio"],
                 $row["descripcion"],
                 $row["cantidad"],
@@ -56,8 +56,8 @@
 
         foreach ($productos as $producto) {
             echo '<tr>';
-            echo '<td><img src="' . $producto->imagen . '" alt="' . $producto->nombre_producto . '" width="100" height="100"></td>';
-            echo '<td>' . $producto->nombre_producto . '</td>';
+            echo '<td><img src="' . $producto->imagen . '" alt="' . $producto->nombreProducto. '" width="100" height="100"></td>';
+            echo '<td>' . $producto->nombreProducto. '</td>';
             echo '<td>' . $producto->precio . '€ </td>';
             echo '<td>' . $producto->descripcion . '</td>';
             echo '<td>' . $producto->cantidad . '</td>';

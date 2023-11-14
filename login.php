@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $usuario = ($_POST["usuario"]);
   $password = ($_POST["password"]);
   $error;
-  $sql = "SELECT * FROM usuarios WHERE usuario = '$usuario'";
+  $sql = "SELECT usuario, contrasena FROM usuarios WHERE usuario = '$usuario'";
   $resultado = $conexion->query($sql);
 
   if ($resultado->num_rows === 0) {

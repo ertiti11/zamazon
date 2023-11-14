@@ -6,36 +6,48 @@ if (!isset($_SESSION["usuario"])) {
     exit;
 }
 
-$error = '';
-$succesfull = '';
+$error;
+$success = '';
+
+require './bd/con_bbdd.php';
+require 'clases/producto.php';
+require './utils/validacion.php';
+
+
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    require './bd/con_bbdd.php'; 
-    require 'clases/producto.php'; 
+    $errorNombre="";
+    $errorPrecio="";
+    $errorDescripcion="";
+    $errorCantidad="";
     $producto = new Producto($conexion);
+
     $nombre = sanitizeInput($_POST["nombre"]);
     $precio = sanitizeInput($_POST["precio"]);
     $descripcion = sanitizeInput($_POST["descripcion"]);
     $cantidad = sanitizeInput($_POST["cantidad"]);
     $imagen = $_FILES["imagen"];
 
-    $producto->crearProducto($nombre, $precio, $descripcion, $cantidad, $imagen);
+    $errorNombre = validarCadena($nombre);
+    $errorPrecio = validarNumeroDecimal($precio);
+    $errorDescripcion = validarDescripcion($descripcion);
+    $errorCantidad = validarCantidad($cantidad);
 
-    if ($producto->guardarProducto()) {
-        $succesfull = "Producto agregado con éxito.";
-    } else {
-        $error = "Error al agregar el producto.";
+    if ($errorNombre == "" && $errorPrecio == "" && $errorDescripcion == "" && $errorCantidad == "") {
+        $producto->crearProducto($nombre, $precio, $descripcion, $cantidad, $imagen);
+        if ($producto->guardarProducto()) {
+            $success = "Producto agregado con éxito.";
+        } else {
+            $error = "Error al agregar el producto.";
+        }
     }
+
 }
 
-function sanitizeInput($data)
-{
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
+
 ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -53,24 +65,32 @@ function sanitizeInput($data)
     <main class="form-signin">
         <form class="" method="post" enctype="multipart/form-data">
             <h1 class="h3 mb-3 fw-normal">Nuevo producto</h1>
-            <?php if (!empty($error)) echo "<div class='alert alert-danger' role='alert'>$error</div>"; ?>
-            <?php if (!empty($succesfull)) echo "<div class='alert alert-success' role='alert'>$succesfull</div>"; ?>
+            <?php if (!empty($errorNombre)) echo "<div class='alert alert-danger' role='alert'>$errorNombre</div>"; ?>
+            <?php if (!empty($errorPrecio)) echo "<div class='alert alert-danger' role='alert'>$errorPrecio</div>"; ?>
+            <?php if (!empty($errorDescripcion)) echo "<div class='alert alert-danger' role='alert'>$errorDescripcion</div>"; ?>
+            <?php if (!empty($errorCantidad)) echo "<div class='alert alert-danger' role='alert'>$errorCantidad</div>"; ?>
+            <?php if (!empty($success)) echo "<div class='alert alert-success' role='alert'>$success</div>"; ?>
+
             <div class="form-floating">
                 <input type="text" name="nombre" class="form-control" id="floatingInput" placeholder="Nombre de producto" required>
                 <label for="floatingInput">Nombre de producto</label>
             </div>
+
             <div class="form-floating">
                 <input type="text" name="precio" class="form-control" id="floatingPassword" placeholder="Precio" required>
                 <label for="floatingPassword">Precio</label>
             </div>
+
             <div class="form-floating">
                 <input type="text" name="descripcion" class="form-control" id="floatingPassword" placeholder="Descripcion" required>
                 <label for="floatingPassword">Descripción</label>
             </div>
+
             <div class="form-floating">
                 <input type="number" name="cantidad" class="form-control" id="floatingPassword" placeholder="Cantidad" required>
                 <label for="floatingPassword">Cantidad</label>
             </div>
+
             <div class="form-floating">
                 <input type="file" name="imagen" class="form-control" id="floatingPassword" required>
                 <label for="floatingPassword">Imagen</label>

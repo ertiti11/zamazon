@@ -3,7 +3,7 @@ class Producto
 {
     private $conexion;
 
-    public $nombre_producto;
+    public $nombreProducto;
     public $precio;
     public $descripcion;
     public $cantidad;
@@ -16,7 +16,7 @@ class Producto
 
     public function crearProducto($nombre, $precio, $descripcion, $cantidad, $imagen)
     {
-        $this->nombre_producto = $nombre;
+        $this->nombreProducto = $nombre;
         $this->precio = $precio;
         $this->descripcion = $descripcion;
         $this->cantidad = $cantidad;
@@ -41,10 +41,10 @@ class Producto
             throw new Exception("Error al guardar la imagen.");
         }
 
-        $sql = "INSERT INTO productos (nombre_producto, precio, descripcion, cantidad, imagen) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO productos (nombreProducto, precio, descripcion, cantidad, imagen) VALUES (?, ?, ?, ?, ?)";
 
         $stmt = $this->conexion->prepare($sql);
-        $stmt->bind_param("sdsss", $this->nombre_producto, $this->precio, $this->descripcion, $this->cantidad, $imagen_guardada);
+        $stmt->bind_param("sdsss", $this->nombreProducto, $this->precio, $this->descripcion, $this->cantidad, $imagen_guardada);
 
         if ($stmt->execute()) {
             $stmt->close();

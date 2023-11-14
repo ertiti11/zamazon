@@ -1,0 +1,29 @@
+apt update es un comando que se utiliza para actualizar la lista de paquetes disponibles en tu repositorio. Lo que sucede es que tu sistema se conecta a los servidores de los repositorios configurados en tu sistema y descarga la lista más reciente de paquetes disponibles y sus versiones. Debería terminar sin errores y mostrar un resumen de los paquetes que se pueden actualizar.
+
+Para actualizar el sistema operativo, puedes usar el comando sudo apt upgrade. Este comando instalará las actualizaciones disponibles para los paquetes que ya están instalados en tu sistema.
+
+Puedes obtener la dirección IP de tu servidor utilizando el comando ip addr show. La dirección IP de tu servidor se mostrará junto a la etiqueta inet.
+
+Para probar que Apache2 está funcionando, puedes abrir un navegador web en un cliente y escribir la dirección IP de tu servidor. Deberías ver la página por defecto de Apache2. No puedo proporcionarte una imagen ya que no tengo la capacidad de generar imágenes.
+
+Para conectarte a tu servidor usando SSH, puedes usar el comando ssh usuario@direccion_ip_del_servidor. Aquí, usuario es tu nombre de usuario en el servidor y direccion_ip_del_servidor es la dirección IP de tu servidor.
+
+Para demostrar que tu servidor puede ejecutar código PHP, puedes crear un archivo PHP simple en el directorio de tu sitio web con el siguiente contenido: <?php phpinfo(); ?>. Luego, puedes acceder a este archivo desde un cliente utilizando un navegador web.
+
+Para crear dos hosts virtuales en Apache, necesitarás crear dos archivos de configuración en el directorio /etc/apache2/sites-available/. Cada archivo de configuración definirá un host virtual. Puedes usar el comando a2ensite para habilitar cada sitio y luego reiniciar Apache con systemctl restart apache2.
+
+Para evitar que se liste el contenido de las carpetas IMG y STYLES, puedes agregar la directiva Options -Indexes en la configuración de cada host virtual.
+
+Para cambiar la página que se carga por defecto en el sitio2, puedes agregar la directiva DirectoryIndex inicio.html en la configuración del host virtual del sitio2.
+
+Para evitar las conexiones desde todas las IP’s del tipo 10.1.1.X, puedes usar la directiva Require en la configuración del host virtual del sitio1.
+
+Para permitir el acceso solo desde tu PC, puedes usar la directiva Require ip tu_direccion_ip en la configuración del host virtual del sitio2.
+
+Para crear una autenticación básica, puedes usar el módulo mod_auth_basic de Apache. Necesitarás crear un archivo de contraseñas con el comando htpasswd y luego configurar el host virtual para requerir autenticación.
+
+Para la autenticación digest, puedes usar el módulo mod_auth_digest de Apache. El proceso es similar al de la autenticación básica, pero necesitarás usar el comando htdigest en lugar de htpasswd.
+
+Para configurar una IP estática, puedes editar el archivo /etc/network/interfaces y configurar tu interfaz de red con una dirección IP estática.
+
+Para habilitar HTTPS, necesitarás obtener un certificado SSL y configurar Apache para usarlo. Puedes usar el comando a2enmod ssl para habilitar el módulo SSL de Apache y luego configurar cada host virtual para usar tu certificado SSL.
