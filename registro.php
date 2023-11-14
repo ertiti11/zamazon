@@ -1,22 +1,22 @@
 <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $usuario = $_POST["usuario"];
-        $passwordHash = password_hash($_POST["password"], PASSWORD_DEFAULT);
-        $fechaNacimiento = $_POST["fechaNacimiento"];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $usuario = $_POST["usuario"];
+    $passwordHash = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    $fechaNacimiento = $_POST["fechaNacimiento"];
 
-        require './bd/con_bbdd.php';
+    require './bd/con_bbdd.php';
 
-        $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES ('$usuario', '$passwordHash', '$fechaNacimiento')";
+    $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES ('$usuario', '$passwordHash', '$fechaNacimiento')";
 
-        if ($conexion->query($sql) === TRUE) {
-            echo "Usuario agregado con éxito.";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conexion->error;
-        }
-
-        $conexion->close();
+    if ($conexion->query($sql) === TRUE) {
+        $success =  "Usuario agregado con éxito.";
+    } else {
+        $error = "Error al agregar el usuario";
     }
-    ?>
+
+    $conexion->close();
+}
+?>
 <!DOCTYPE html>
 <html>
 
@@ -32,7 +32,8 @@
         <form class="" method="post">
             <img class="mb-4 w-100" src="./images/amazon.png" alt="">
             <h1 class="h3 mb-3 fw-normal">Registro</h1>
-
+            <?php if (isset($error)) echo "<div class='alert alert-danger' role='alert'>" . $error . "</div>" ?>
+            <?php if (isset($success)) echo "<div class='alert alert-success' role='alert'>" . $success . "</div>" ?>
             <div class="form-floating">
                 <input type="text" name="usuario" class="form-control" id="floatingInput" placeholder="name@example.com" required>
                 <label for="floatingInput">Usuario</label>
@@ -50,7 +51,7 @@
 
             <div class="checkbox mb-3">
                 <label>
-                    <input type="checkbox" value="remember-me"> Remember me
+                    <a href="/login"> ¿Ya tienes cuenta? Inicia sesión</a>
                 </label>
             </div>
             <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>

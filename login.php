@@ -28,7 +28,7 @@ session_start();
 
 if (isset($_SESSION["usuario"])) {
   header("location: /lista_productos.php");
-} 
+}
 
 require './bd/con_bbdd.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -55,15 +55,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       // Verificar si el usuario ya tiene una cesta
       $sql_check_cesta = "SELECT * FROM cestas WHERE usuario = '$usuario'";
       $result_check_cesta = $conexion->query($sql_check_cesta);
-  
+
       if ($result_check_cesta->num_rows == 0) {
-          // El usuario no tiene una cesta, por lo tanto, se crea una cesta vacía
-          $sql_crear_cesta = "INSERT INTO cestas (usuario) VALUES ('$usuario')";
-          if ($conexion->query($sql_crear_cesta) === TRUE) {
-              echo "Se ha adjuntado una cesta vacía al iniciar sesión.";
-          } else {
-              echo "Error al crear la cesta: " . $conexion->error;
-          }
+        // El usuario no tiene una cesta, por lo tanto, se crea una cesta vacía
+        $sql_crear_cesta = "INSERT INTO cestas (usuario) VALUES ('$usuario')";
+        if ($conexion->query($sql_crear_cesta) === TRUE) {
+          echo "Se ha adjuntado una cesta vacía al iniciar sesión.";
+        } else {
+          echo "Error al crear la cesta: " . $conexion->error;
+        }
       }
       header('location: lista_productos.php');
     } else {
@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="checkbox mb-3">
       <label>
-        <input type="checkbox" value="remember-me"> Remember me
+        <a href="/registro"> ¿Todavía no tienes cuenta? Regístrate</a>
       </label>
     </div>
     <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
