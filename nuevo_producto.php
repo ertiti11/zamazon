@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $errorNombre = validarCadena($nombre);
     $errorPrecio = validarNumeroDecimal($precio);
-    $errorDescripcion = validarDescripcion($descripcion);
+    $errorDescripcion = validarDescripcion($descripcion);pus
     $errorCantidad = validarCantidad($cantidad);
 
     if ($errorNombre == "" && $errorPrecio == "" && $errorDescripcion == "" && $errorCantidad == "") {
