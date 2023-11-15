@@ -2,7 +2,9 @@
 
 
 //comprobar si ha iniciado sesion y si no pues le pondremos la sesion con valor a invitado y un boton de login y si ha iniciado le pondremos un boton de logout
-if (isset($_SESSION["usuario"])) {
+if (isset($_SESSION["usuario"]) && $_SESSION["rol"] == "invitado") {
+    $logout =  '<a class="btn btn-primary" href="/logout">Logout</a>';
+} elseif ($_SESSION["rol"] == "admin") {
     $logout =  '<a class="btn btn-primary" href="/logout">Logout</a>';
     $producto = '<li class="active"><a class="nav-link active" href="/nuevo_producto">añadir producto</a></li>';
 } else {

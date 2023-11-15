@@ -11,11 +11,14 @@ CREATE TABLE Productos (
   imagen VARCHAR(100) NOT NULL
 );
 
+
+
 CREATE TABLE usuarios (
   usuario VARCHAR(12) PRIMARY KEY NOT NULL,
   contrasena VARCHAR(255) NOT NULL,
   fechaNacimiento DATE NOT NULL,
-  rol VARCHAR(10) NOT NULL DEFAULT('cliente'),
+  rol VARCHAR(10) NOT NULL DEFAULT 'cliente',
+  nuevo_rol VARCHAR(20)
 );
 
 CREATE TABLE cestas (
