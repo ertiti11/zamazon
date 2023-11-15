@@ -8,10 +8,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES ('$usuario', '$passwordHash', '$fechaNacimiento')";
 
-    if ($conexion->query($sql) === TRUE) {
-        $success =  "Usuario agregado con éxito.";
+    $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES (?, ?, ?)";
+
+    $stmt = $this->conexion->prepare($sql);
+    $stmt->bind_param("sdsss", $this->nombreProducto, $this->precio, $this->descripcion, $this->cantidad, $imagen_guardada);
+
+    if ($stmt->execute()) {
+        $stmt->close();
+        return true; // Producto guardado con éxito
     } else {
-        $error = "Error al agregar el usuario";
+        $stmt->close();
+        throw new Exception("Error al guardar el producto en la base de datos: " . $this->conexion->error);
     }
 
     $conexion->close();

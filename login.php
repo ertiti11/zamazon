@@ -74,7 +74,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 }
 
-
 ?>
 
 <main class="form-signin">
@@ -99,6 +98,100 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
     <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
   </form>
+
+  <script>
+    // Función para enviar datos de analítica al servidor (puedes cambiar la URL)
+    function enviarDatosAnalytics(datos) {
+      // Simula el envío de datos al servidor, puedes reemplazarlo con una llamada AJAX real
+      console.log('Enviando datos de analítica:', datos);
+    }
+
+    // Función para obtener el tiempo de permanencia en la página
+    function obtenerTiempoPermanencia() {
+      var tiempoActual = new Date().getTime();
+      var tiempoEnPagina = tiempoActual - tiempoInicio;
+      return tiempoEnPagina;
+    }
+
+    // Función para obtener datos almacenados en el localStorage
+    function obtenerDatosLocalStorage() {
+      var datosAlmacenados = localStorage.getItem('datos_analiticos');
+      return datosAlmacenados ? JSON.parse(datosAlmacenados) : [];
+    }
+
+    // Función para guardar datos en el localStorage
+    function guardarDatosLocalStorage(datos) {
+      var datosAlmacenados = obtenerDatosLocalStorage();
+      datosAlmacenados.push(datos);
+      localStorage.setItem('datos_analiticos', JSON.stringify(datosAlmacenados));
+    }
+
+    // Registra el tiempo de inicio al cargar la página
+    var tiempoInicio = new Date().getTime();
+
+    // Registra la página vista
+    var datosPaginaVista = {
+      tipo: 'pagina_vista',
+      url: window.location.href,
+      timestamp: new Date().toISOString()
+    };
+    enviarDatosAnalytics(datosPaginaVista);
+    guardarDatosLocalStorage(datosPaginaVista);
+
+    // Registra el tiempo de permanencia cuando el usuario abandona la página
+    window.addEventListener('beforeunload', function() {
+      var tiempoEnPagina = obtenerTiempoPermanencia();
+      var datosTiempoPermanencia = {
+        tipo: 'tiempo_permanencia',
+        tiempo: tiempoEnPagina,
+        url: window.location.href,
+        timestamp: new Date().toISOString()
+      };
+      enviarDatosAnalytics(datosTiempoPermanencia);
+      guardarDatosLocalStorage(datosTiempoPermanencia);
+    });
+
+    // Agrega el evento de clic al botón (asegúrate de que exista un elemento con el id 'clicBoton')
+    var boton = document.querySelector('.btn-primary');
+    boton.addEventListener('click', function() {
+      var datosClicBoton = {
+        tipo: 'clic_boton',
+        url: window.location.href,
+        timestamp: new Date().toISOString()
+      };
+      enviarDatosAnalytics(datosClicBoton);
+      guardarDatosLocalStorage(datosClicBoton);
+    });
+
+    // Registra eventos de clic en enlaces
+    document.addEventListener('click', function(event) {
+      if (event.target.tagName === 'A') {
+        var datosClicEnlace = {
+          tipo: 'clic_enlace',
+          url: event.target.href,
+          timestamp: new Date().toISOString()
+        };
+        enviarDatosAnalytics(datosClicEnlace);
+        guardarDatosLocalStorage(datosClicEnlace);
+      }
+    });
+
+    // Registra eventos de cambio de página
+    var paginaActual = window.location.href;
+    setInterval(function() {
+      if (paginaActual !== window.location.href) {
+        var datosCambioPagina = {
+          tipo: 'cambio_pagina',
+          url_anterior: paginaActual,
+          url_nueva: window.location.href,
+          timestamp: new Date().toISOString()
+        };
+        enviarDatosAnalytics(datosCambioPagina);
+        guardarDatosLocalStorage(datosCambioPagina);
+        paginaActual = window.location.href;
+      }
+    }, 1000); // Verifica el cambio de página cada segundo
+  </script>
 </main>
 
 <body>
