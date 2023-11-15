@@ -10,8 +10,6 @@
     body {
         font-family: 'Inter Tight', sans-serif;
         font-family: 'Roboto', sans-serif;
-        background-color: #202124;
-        color: white;
     }
 </style>
 

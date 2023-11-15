@@ -39,7 +39,7 @@
     ?>
 
     <h2 class="text-center my-5">Lista de Productos</h2>
-
+    <?php echo $_SESSION["rol"]; ?>
     <div style="display: flex; justify-content:center; align-items:center">
         <?php
         echo "<table class='table table-borderless w-50'>";

@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $password = ($_POST["password"]);
   $error;
   // Utilizar una consulta preparada para evitar inyección SQL
-  $stmt = $conexion->prepare("SELECT usuario, contrasena FROM usuarios WHERE usuario = ?");
+  $stmt = $conexion->prepare("SELECT usuario, contrasena,rol FROM usuarios WHERE usuario = ?");
   $stmt->bind_param("s", $usuario);
   $stmt->execute();
   $result = $stmt->get_result();
@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   } else {
     while ($fila = $result->fetch_assoc()) {
       $password_cifrada = $fila["contrasena"];
+      $rol = $fila["rol"];
     }
 
     $acceso_valido = password_verify($password, $password_cifrada);
@@ -53,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($acceso_valido) {
       $_SESSION["usuario"] = $usuario;
       $usuario = $_SESSION["usuario"];
-
+      $_SESSION["rol"] = $rol;
       // Verificar si el usuario ya tiene una cesta
       $sql_check_cesta = "SELECT * FROM cestas WHERE usuario = '$usuario'";
       $result_check_cesta = $conexion->query($sql_check_cesta);
