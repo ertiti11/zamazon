@@ -55,7 +55,16 @@ function validarCantidad($numero){
     }
 }
 
+function validarContrasena($contrasena) {
+    // Verificar la longitud de la contraseña
+    $longitud = strlen($contrasena);
+    if ($longitud > 255) {
+        return "La longitud de la contraseña no debe exceder los 255 caracteres.";
+    }
 
+    // La validación pasó, la contraseña es válida
+    return;
+}
 
 function validarNombreUsuario($nombreUsuario) {
     // Verificar la longitud del nombre de usuario

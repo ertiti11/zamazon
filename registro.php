@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     $errorUsuario = validarNombreUsuario($usuario);
-
+    $errorPassword = validarContrasena($_POST["password"]);
     // Utilizar la conexión del archivo de conexión
     $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES (?, ?, ?)";
     $stmt = $conexion->prepare($sql);
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Vincular los parámetros y sus tipos
     $stmt->bind_param("sss", $usuario, $passwordHash, $fechaNacimiento);
-    if ($errorUsuario == "") {
+    if (!isset($errorUsuario) && !isset($errorPassword)) {
         // Ejecutar la consulta
         if ($stmt->execute()) {
             $stmt->close();
