@@ -2,7 +2,7 @@
 
 
 //comprobar si ha iniciado sesion y si no pues le pondremos la sesion con valor a invitado y un boton de login y si ha iniciado le pondremos un boton de logout
-if (isset($_SESSION["usuario"]) && $_SESSION["rol"] == "invitado") {
+if (isset($_SESSION["usuario"]) && $_SESSION["rol"] == "cliente") {
     $logout =  '<a class="btn btn-primary" href="/logout">Logout</a>';
 } elseif ($_SESSION["rol"] == "admin") {
     $logout =  '<a class="btn btn-primary" href="/logout">Logout</a>';

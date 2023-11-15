@@ -53,7 +53,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($acceso_valido) {
       $_SESSION["usuario"] = $usuario;
-      $usuario = $_SESSION["usuario"];
       $_SESSION["rol"] = $rol;
       // Verificar si el usuario ya tiene una cesta
       $sql_check_cesta = "SELECT * FROM cestas WHERE usuario = '$usuario'";
