@@ -2,14 +2,18 @@
 require './bd/con_bbdd.php'; // Incluir el archivo de conexión
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    require './utils/validacion.php';
     $usuario = $_POST["usuario"];
     $passwordHash = password_hash($_POST["password"], PASSWORD_DEFAULT);
     $fechaNacimiento = $_POST["fechaNacimiento"];
 
+
+    $errorUsuario = validarNombreUsuario($usuario);
+
     // Utilizar la conexión del archivo de conexión
     $sql = "INSERT INTO usuarios (usuario, contrasena, fechaNacimiento) VALUES (?, ?, ?)";
     $stmt = $conexion->prepare($sql);
-    
+
     // Verificar si la preparación tuvo éxito
     if (!$stmt) {
         throw new Exception("Error en la preparación de la consulta: " . $conexion->error);
@@ -17,14 +21,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Vincular los parámetros y sus tipos
     $stmt->bind_param("sss", $usuario, $passwordHash, $fechaNacimiento);
-
-    // Ejecutar la consulta
-    if ($stmt->execute()) {
-        $stmt->close();
-        $success = "Usuario registrado con éxito";
+    if ($errorUsuario == "") {
+        // Ejecutar la consulta
+        if ($stmt->execute()) {
+            $stmt->close();
+            $success = "Usuario registrado con éxito";
+        } else {
+            $stmt->close();
+            $error = "Error al registrar el usuario en la base de datos: " . $conexion->error;
+        }
     } else {
         $stmt->close();
-        $error = "Error al registrar el usuario en la base de datos: " . $conexion->error;
     }
 }
 
@@ -47,8 +54,9 @@ $conexion->close();
             <img class="mb-4 w-100" src="./images/amazon.png" alt="">
             <h1 class="h3 mb-3 fw-normal">Registro</h1>
 
-            <?php if (isset($error)) echo "<div class='alert alert-danger' role='alert'>" . $error . "</div>" ?>
+            <!-- <?php if (isset($error)) echo "<div class='alert alert-danger' role='alert'>" . $error . "</div>" ?> -->
             <?php if (isset($success)) echo "<div class='alert alert-success' role='alert'>" . $success . "</div>" ?>
+            <?php if (isset($errorUsuario)) echo "<div class='alert alert-danger' role='alert'>" . $errorUsuario . "</div>" ?>
 
             <div class="form-floating">
                 <input type="text" name="usuario" class="form-control" id="floatingInput" placeholder="name@example.com" required>

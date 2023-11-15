@@ -55,6 +55,24 @@ function validarCantidad($numero){
     }
 }
 
+
+
+function validarNombreUsuario($nombreUsuario) {
+    // Verificar la longitud del nombre de usuario
+    $longitud = strlen($nombreUsuario);
+    if ($longitud < 4 || $longitud > 12) {
+        return "La longitud del nombre de usuario debe estar entre 4 y 12 caracteres.";
+    }
+    
+    // Verificar caracteres permitidos (letras y barrabajas)
+    if (!preg_match('/^[a-zA-Z_]+$/', $nombreUsuario)) {
+        return "El nombre de usuario solo puede contener letras y barrabajas.";
+    }
+    
+    // La validación pasó, el nombre de usuario es válido
+    return;
+}
+
 function sanitizeInput($data)
 {
     $data = trim($data);
