@@ -99,6 +99,7 @@
                     echo "</form>"; // Cierra el formulario después de cada iteración
                     echo "</td>";
                     echo '</tr>';
+                    $stmt->close();
                 }
 
                 echo "</tbody>";
