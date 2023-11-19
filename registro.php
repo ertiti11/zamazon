@@ -82,13 +82,3 @@ $conexion->close();
 </body>
 
 </html>
-
-
-
-: Uncaught mysqli_sql_exception: Commands out of sync; you can't
- run this command now in C:\xampp2\htdocs\zamazon\lista_productos.php:79
- Stack trace: #0 C:\xampp2\htdocs\zamazon\lista_productos.php(79): 
- mysqli->prepare('SELECT IdProduc...') #1 {main} thrown in
-C:\xampp2\htdocs\zamazon\lista_productos.php
-on line
-79

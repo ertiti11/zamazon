@@ -42,6 +42,7 @@
             // Crear un objeto Producto por cada registro
             $producto = new Producto($conexion);
             $producto->crearProducto(
+                $row["IdProducto"],
                 $row["nombreProducto"],
                 $row["precio"],
                 $row["descripcion"],
@@ -75,12 +76,6 @@
                 <?php
                 require './bd/con_bbdd.php';
                 foreach ($productos as $producto) {
-                    $sql = "SELECT IdProducto FROM productos WHERE nombreProducto = ?";
-                    $stmt = $conexion->prepare($sql);
-                    $stmt->bind_param("s", $producto->nombreProducto); // "s" indica que el parámetro es una cadena
-                    $stmt->execute();
-                    $stmt->bind_result($idProducto);
-                    $stmt->fetch();
                     echo '<tr>';
                     echo '<td><img src="' . $producto->imagen . '" alt="' . $producto->nombreProducto . '" width="100" height="100"></td>';
                     echo '<td>' . $producto->nombreProducto . '</td>';
@@ -89,19 +84,17 @@
                     echo '<td>' . $producto->cantidad . '</td>';
                     echo "<td>";
                     echo '<form method="post">';
-                    echo "<input type='hidden' name='nombre' value='$idProducto'></input>";
+                    echo "<input type='hidden' name='nombre' value='$producto->id'></input>";
                     echo '<select name="cantidad" id="cantidad">';
                     for ($i = 1; $i <= 5; $i++) {
                         echo '<option value="' . $i . '">' . $i . '</option>';
                     }
                     echo '</select>';
                     echo "<input type='submit' value='añadir a la cesta'></input>";
-                    echo "</form>"; // Cierra el formulario después de cada iteración
+                    echo "</form>";
                     echo "</td>";
                     echo '</tr>';
-                    $stmt->close();
                 }
-
                 echo "</tbody>";
                 echo "</table><br>";
 
@@ -111,21 +104,44 @@
                     $idProducto = $_POST["nombre"];
                     echo "id:" . $idProducto . " cesta:" . $idCesta . " cantidad." . $cantidad;
 
-                    // Utiliza una consulta preparada para la inserción
-                    $sql = "INSERT INTO productoscestas (IdProducto, IdCesta, cantidad) VALUES (?, ?, ?)";
-                    $stmt = $conexion->prepare($sql);
-                    $stmt->bind_param("iii", $idProducto, $idCesta, $cantidad);
-                    $stmt->execute();
+                    // Verificar si ya existe una entrada para el producto en la cesta
+                    $sql_check = "SELECT IdProducto FROM productoscestas WHERE IdProducto = ? AND IdCesta = ?";
+                    $stmt_check = $conexion->prepare($sql_check);
+                    $stmt_check->bind_param("ii", $idProducto, $idCesta);
+                    $stmt_check->execute();
+                    $stmt_check->store_result();
 
-                    // Verifica si la inserción fue exitosa
-                    if ($stmt->affected_rows > 0) {
-                        echo "Producto añadido a la cesta correctamente.";
+                    if ($stmt_check->num_rows > 0) {
+                        // Si ya existe, realizar una actualización en lugar de una inserción
+                        $sql_update = "UPDATE productoscestas SET cantidad = cantidad + ? WHERE IdProducto = ? AND IdCesta = ?";
+                        $stmt_update = $conexion->prepare($sql_update);
+                        $stmt_update->bind_param("iii", $cantidad, $idProducto, $idCesta);
+                        $stmt_update->execute();
+
+                        if ($stmt_update->affected_rows > 0) {
+                            echo "Cantidad actualizada correctamente.";
+                        } else {
+                            echo "Error al actualizar la cantidad: " . $stmt_update->error;
+                        }
+
+                        $stmt_update->close();
                     } else {
-                        echo "Error al añadir el producto a la cesta: " . $stmt->error;
+                        // Si no existe, realizar una inserción normal
+                        $sql_insert = "INSERT INTO productoscestas (IdProducto, IdCesta, cantidad) VALUES (?, ?, ?)";
+                        $stmt_insert = $conexion->prepare($sql_insert);
+                        $stmt_insert->bind_param("iii", $idProducto, $idCesta, $cantidad);
+                        $stmt_insert->execute();
+
+                        if ($stmt_insert->affected_rows > 0) {
+                            echo "Producto añadido a la cesta correctamente.";
+                        } else {
+                            echo "Error al añadir el producto a la cesta: " . $stmt_insert->error;
+                        }
+
+                        $stmt_insert->close();
                     }
 
-                    // Cierra la consulta preparada
-                    $stmt->close();
+                    $stmt_check->close();
                 }
                 ?>
     </div>

@@ -1,6 +1,7 @@
 <?php
 class Producto
 {
+    public $id;
     private $conexion;
 
     public $nombreProducto;
@@ -14,8 +15,11 @@ class Producto
         $this->conexion = $conexion;
     }
 
-    public function crearProducto($nombre, $precio, $descripcion, $cantidad, $imagen)
+    public function crearProducto($id = null, $nombre, $precio, $descripcion, $cantidad, $imagen)
     {
+        if($id != null) {
+            $this->id = $id;
+        }
         $this->nombreProducto = $nombre;
         $this->precio = $precio;
         $this->descripcion = $descripcion;
@@ -25,6 +29,7 @@ class Producto
 
     public function guardarProducto()
     {
+
         $file_size = $this->imagen['size']; // Obtener el tamaño del archivo desde $_FILES
 
         $max_file_size = 5 * 1024 * 1024; // 5 MB
@@ -48,6 +53,7 @@ class Producto
 
         if ($stmt->execute()) {
             $stmt->close();
+            $this->id = $this->conexion->insert_id;
             return true; // Producto guardado con éxito
         } else {
             $stmt->close();
