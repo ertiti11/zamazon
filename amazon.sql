@@ -2,13 +2,14 @@ CREATE SCHEMA IF NOT EXISTS zamazon;
 
 USE zamazon;
 
-CREATE TABLE Productos (
+CREATE TABLE productos (
   IdProducto INT PRIMARY KEY AUTO_INCREMENT,
   nombreProducto VARCHAR(40) NOT NULL,
   precio NUMERIC(7, 2) NOT NULL,
   descripcion VARCHAR(255) NOT NULL,
   cantidad NUMERIC(5) NOT NULL,
-  imagen VARCHAR(100) NOT NULL
+  imagen VARCHAR(100) NOT NULL,
+  rol VARCHAR(10) NOT NULL DEFAULT 'cliente',
 );
 
 
