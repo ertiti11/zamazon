@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errorCantidad = validarCantidad($cantidad);
 
     if ($errorNombre == "" && $errorPrecio == "" && $errorDescripcion == "" && $errorCantidad == "") {
-        $producto->crearProducto($nombre, $precio, $descripcion, $cantidad, $imagen);
+        $producto->crearProducto(null,$nombre, $precio, $descripcion, $cantidad, $imagen);
         if ($producto->guardarProducto()) {
             $success = "Producto agregado con éxito.";
         } else {

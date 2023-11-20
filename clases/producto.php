@@ -17,9 +17,9 @@ class Producto
 
     public function crearProducto($id = null, $nombre, $precio, $descripcion, $cantidad, $imagen)
     {
-        if($id != null) {
-            $this->id = $id;
-        }
+        
+        $this->id = $id;
+        
         $this->nombreProducto = $nombre;
         $this->precio = $precio;
         $this->descripcion = $descripcion;
