@@ -1,6 +1,5 @@
 <?php
-session_start();
-require './components/navbar.php';
+session_start(); 
 require './bd/con_bbdd.php';
 require './clases/producto.php';
 
@@ -10,7 +9,7 @@ if (isset($_SESSION["usuario"])) {
     $stmt->bind_param("s", $usuario);
     $stmt->execute();
     $result = $stmt->get_result();
-
+    
     if ($result->num_rows === 0) {
         $error = "La cesta no existe";
     } else {
@@ -88,6 +87,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_insert->close();
     }
 
+    require './components/navbar.php';
+    
     $stmt_check->close();
     $conexion->close();
 }
