@@ -61,9 +61,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $unidades = $producto["cantidad"];
 
 
-  
+
     if ($cantidad > $unidades) {
-        echo "No hay suficiente stock";
+        $errorStock = "No hay suficiente stock";
     } else {
         // Verificar si ya existe una entrada para el producto en la cesta
         $sql_check = "SELECT IdProducto FROM productoscestas WHERE IdProducto = ? AND IdCesta = ?";
@@ -130,9 +130,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <h2 class="text-center my-5">Lista de Productos</h2>
+    <div style="width: 100%;display:flex; justify-content: center;align-items:center">
+        <?php if (isset($errorStock)) echo "<div class='alert alert-danger w-25' role='alert'>" . $errorStock . "</div>" ?>
+    </div>
+
     <div style="display: flex; width:100%; justify-content:center">
 
-        <?php if (isset($success_msg)) echo "<div class='alert alert-success' style='width:33em' role='alert'>" . $success_msg . "</div>" ?>
+        <?php if (isset($success_msg)) echo "<div class='alert alert-success ' style='text-align:center;width:33em' role='alert'>" . $success_msg . "</div>" ?>
     </div>
     <?php if (isset($error)) echo "<div class='alert alert-danger' role='alert'>" . $error . "</div>" ?>
     <section style="display: flex; flex-direction: column; padding: 1rem;">
