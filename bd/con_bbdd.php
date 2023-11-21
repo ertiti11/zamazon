@@ -1,12 +1,8 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "123456789";
+$password = "1234";
 $dbname = "zamazon";
 
 $conexion = new Mysqli($servername, $username, $password, $dbname)
     or die("Error de conexión");
-
-
-?>
-

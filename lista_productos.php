@@ -1,20 +1,21 @@
 <?php
-session_start(); 
+session_start();
 require './bd/con_bbdd.php';
 require './clases/producto.php';
+require './components/navbar.php';
 
 if (isset($_SESSION["usuario"])) {
     $usuario = $_SESSION["usuario"];
-    $stmt = $conexion->prepare("SELECT IdCestas FROM cestas WHERE usuario = ?");
+    $stmt = $conexion->prepare("SELECT IdCesta FROM Cestas WHERE usuario = ?");
     $stmt->bind_param("s", $usuario);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     if ($result->num_rows === 0) {
         $error = "La cesta no existe";
     } else {
         while ($fila = $result->fetch_assoc()) {
-            $_SESSION["IdCesta"] = $fila["IdCestas"];
+            $_SESSION["IdCesta"] = $fila["IdCesta"];
         }
     }
     $stmt->close();
@@ -50,47 +51,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $idCesta = $_SESSION["IdCesta"];
     $idProducto = $_POST["nombre"];
 
-    // Verificar si ya existe una entrada para el producto en la cesta
-    $sql_check = "SELECT IdProducto FROM productoscestas WHERE IdProducto = ? AND IdCesta = ?";
-    $stmt_check = $conexion->prepare($sql_check);
-    $stmt_check->bind_param("ii", $idProducto, $idCesta);
-    $stmt_check->execute();
-    $stmt_check->store_result();
-
-    if ($stmt_check->num_rows > 0) {
-        // Si ya existe, realizar una actualización en lugar de una inserción
-        $sql_update = "UPDATE productoscestas SET cantidad = cantidad + ? WHERE IdProducto = ? AND IdCesta = ?";
-        $stmt_update = $conexion->prepare($sql_update);
-        $stmt_update->bind_param("iii", $cantidad, $idProducto, $idCesta);
-        $stmt_update->execute();
-
-        if ($stmt_update->affected_rows > 0) {
-            $success_msg = "Cantidad actualizada correctamente.";
-        } else {
-            echo "Error al actualizar la cantidad: " . $stmt_update->error;
-        }
-
-        $stmt_update->close();
-    } else {
-        // Si no existe, realizar una inserción normal
-        $sql_insert = "INSERT INTO productoscestas (IdProducto, IdCesta, cantidad) VALUES (?, ?, ?)";
-        $stmt_insert = $conexion->prepare($sql_insert);
-        $stmt_insert->bind_param("iii", $idProducto, $idCesta, $cantidad);
-        $stmt_insert->execute();
-
-        if ($stmt_insert->affected_rows > 0) {
-            echo "Producto añadido a la cesta correctamente.";
-        } else {
-            echo "Error al añadir el producto a la cesta: " . $stmt_insert->error;
-        }
-
-        $stmt_insert->close();
+    // Verificar si la cantidad es mayor a 0
+    if ($cantidad == 0 || $cantidad < 0) {
+        $errorCantidad = "disabled";
     }
+    $sql = "SELECT cantidad FROM productos WHERE idProducto = '$idProducto'";
+    $resultado = $conexion->query($sql);
+    $producto = $resultado->fetch_assoc();
+    $unidades = $producto["cantidad"];
 
-    require './components/navbar.php';
-    
-    $stmt_check->close();
-    $conexion->close();
+
+  
+    if ($cantidad > $unidades) {
+        echo "No hay suficiente stock";
+    } else {
+        // Verificar si ya existe una entrada para el producto en la cesta
+        $sql_check = "SELECT IdProducto FROM productoscestas WHERE IdProducto = ? AND IdCesta = ?";
+        $stmt_check = $conexion->prepare($sql_check);
+        $stmt_check->bind_param("ii", $idProducto, $idCesta);
+        $stmt_check->execute();
+        $stmt_check->store_result();
+
+        if ($stmt_check->num_rows > 0) {
+            // Si ya existe, realizar una actualización en lugar de una inserción
+            $sql_update = "UPDATE productoscestas SET cantidad = cantidad + ? WHERE IdProducto = ? AND IdCesta = ?";
+            $stmt_update = $conexion->prepare($sql_update);
+            $stmt_update->bind_param("iii", $cantidad, $idProducto, $idCesta);
+            $stmt_update->execute();
+
+            if ($stmt_update->affected_rows > 0) {
+                $success_msg = "Cantidad actualizada correctamente.";
+            } else {
+                echo "Error al actualizar la cantidad: " . $stmt_update->error;
+            }
+
+            $stmt_update->close();
+        } else {
+            // Si no existe, realizar una inserción normal
+            $sql_insert = "INSERT INTO productoscestas (IdProducto, IdCesta, cantidad) VALUES (?, ?, ?)";
+            $stmt_insert = $conexion->prepare($sql_insert);
+            $stmt_insert->bind_param("iii", $idProducto, $idCesta, $cantidad);
+            $stmt_insert->execute();
+
+            if ($stmt_insert->affected_rows > 0) {
+                echo "Producto añadido a la cesta correctamente.";
+            } else {
+                echo "Error al añadir el producto a la cesta: " . $stmt_insert->error;
+            }
+
+
+            $stmt_insert->close();
+        }
+
+        $sql = "update productos set cantidad = cantidad - ? where idProducto = ?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("ii", $cantidad, $idProducto);
+        $stmt->execute();
+        if ($stmt->affected_rows > 0) {
+            echo "Cantidad actualizada correctamente.";
+        } else {
+            echo "Error al actualizar la cantidad: " . $stmt->error;
+        }
+        $stmt_check->close();
+        $conexion->close();
+        header("Location: lista_productos.php");
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -115,11 +140,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <table style="width: 100%; text-align: left; border-collapse: collapse;">
             <thead style="border-bottom: 1px solid;">
                 <tr>
-                    <th style="padding: 0.5rem;">Product</th>
-                    <th style="padding: 0.5rem;">Image</th>
-                    <th style="padding: 0.5rem;">Name</th>
-                    <th style="padding: 0.5rem;">Description</th>
-                    <th style="padding: 0.5rem;">Price</th>
+                    <th style="padding: 0.5rem;">Producto</th>
+                    <th style="padding: 0.5rem;">nombre Producto</th>
+                    <th style="padding: 0.5rem;">Descripción</th>
+                    <th style="padding: 0.5rem;">Precio</th>
+                    <th style="padding: 0.5rem;">Stock</th>
                     <th style="padding: 0.5rem;">Quantity</th>
                     <th style="padding: 0.5rem;">Action</th>
                 </tr>
@@ -131,8 +156,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     echo '<tr style="border-bottom: 2px solid #DADADA;">';
                     echo '<td style="padding: 0.5rem;"><img src="' . $producto->imagen . '" alt="' . $producto->nombreProducto . '" width="100" height="100"></td>';
                     echo '<td style="padding: 0.5rem;">' . $producto->nombreProducto . '</td>';
-                    echo '<td style="padding: 0.5rem;">' . $producto->precio . '€ </td>';
                     echo '<td style="padding: 0.5rem;">' . $producto->descripcion . '</td>';
+                    echo '<td style="padding: 0.5rem;">' . $producto->precio . '€ </td>';
                     echo '<td style="padding: 0.5rem;">' . $producto->cantidad . '</td>';
                     echo '<td style="padding: 0.5rem;">';
                     echo '<form method="post" class="d-flex gap-4">';
@@ -161,14 +186,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         echo '<option value="' . $i . '">' . $i . '</option>';
                     }
                     echo '</select>';
-                    echo "<input type='submit' class='p-2' style='background-color:black;color:white;border-radius:8px;border:none' value='añadir a la cesta'></input>";
+                    echo "<input " . (($producto->cantidad == 0 || $producto->cantidad < 0) ? "disabled" : '') . " type='submit' class='p-2' style='background-color:black;color:white;border-radius:8px;border:none' value='añadir a la cesta'></input>";
                     echo "</form>";
                     echo "</td>";
                     echo '</tr>';
                 }
                 echo "</tbody>";
                 echo "</table><br>";
-
                 ?>
                 </div>
 

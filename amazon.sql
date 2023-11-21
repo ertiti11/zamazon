@@ -2,10 +2,10 @@ CREATE SCHEMA IF NOT EXISTS zamazon;
 
 USE zamazon;
 
-CREATE TABLE productos (
+CREATE TABLE Productos (
   IdProducto INT PRIMARY KEY AUTO_INCREMENT,
   nombreProducto VARCHAR(40) NOT NULL,
-  precio NUMERIC(7, 2) NOT NULL,
+  precio FLOAT(7, 2) NOT NULL,
   descripcion VARCHAR(255) NOT NULL,
   cantidad NUMERIC(5) NOT NULL,
   imagen VARCHAR(100) NOT NULL,
@@ -14,26 +14,43 @@ CREATE TABLE productos (
 
 
 
-CREATE TABLE usuarios (
+CREATE TABLE Usuarios (
   usuario VARCHAR(12) PRIMARY KEY NOT NULL,
   contrasena VARCHAR(255) NOT NULL,
   fechaNacimiento DATE NOT NULL,
-  rol VARCHAR(10) NOT NULL DEFAULT 'cliente',
-  nuevo_rol VARCHAR(20)
+  rol VARCHAR(10) NOT NULL DEFAULT 'cliente'
 );
 
-CREATE TABLE cestas (
-  IdCestas INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE Cestas (
+  IdCesta INT PRIMARY KEY AUTO_INCREMENT,
   usuario VARCHAR(12),
-  preciototal NUMERIC(7, 2) NOT NULL DEFAULT(0),
-  CONSTRAINT FK_CESTAS_usuarios FOREIGN KEY (usuario) REFERENCES usuarios(usuario)
+  preciototal FLOAT(7, 2) NOT NULL DEFAULT 0,
+  CONSTRAINT FK_CESTAS_usuarios FOREIGN KEY (usuario) REFERENCES Usuarios(usuario)
 );
 
-CREATE TABLE productosCestas (
+CREATE TABLE ProductosCestas (
   IdProducto INT,
   IdCesta INT,
   cantidad NUMERIC(2),
   CONSTRAINT PK_PRODUCTOSCESTAS PRIMARY KEY (IdProducto, IdCesta),
-  CONSTRAINT FK_PRODUCTOSCESTAS_PRODUCTOS FOREIGN KEY (IdProducto) REFERENCES productos(IdProducto),
-  CONSTRAINT FK_PRODUCTOSCESTAS_CESTAS FOREIGN KEY (IdCesta) REFERENCES cestas(IdCestas)
+  CONSTRAINT FK_PRODUCTOSCESTAS_PRODUCTOS FOREIGN KEY (IdProducto) REFERENCES Productos(IdProducto),
+  CONSTRAINT FK_PRODUCTOSCESTAS_CESTAS FOREIGN KEY (IdCesta) REFERENCES Cestas(IdCesta)
 );
+
+CREATE TABLE Pedidos (
+  idPedido INT(8) PRIMARY KEY AUTO_INCREMENT,
+  usuario VARCHAR(12),
+  precioTotal FLOAT(7, 2),
+  fechaPedido DATETIME DEFAULT (CURRENT_DATE),
+  CONSTRAINT FK_PEDIDOS_USUARIOS FOREIGN KEY (usuario) REFERENCES Usuarios(usuario)
+);
+CREATE TABLE LineasPedidos (
+  lineaPedido INT(2) NOT NULL,
+  idProducto INT,
+  idPedido INT,
+  precioUnitario FLOAT(7, 2),
+  cantidad INT,
+  CONSTRAINT FK_LINEASPEDIDOS_PRODUCTOS FOREIGN KEY (idProducto) REFERENCES Productos(IdProducto),
+  CONSTRAINT FK_LINEASPEDIDOS_PEDIDOS FOREIGN KEY (idPedido) REFERENCES Pedidos(idPedido)
+);
+

@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $password = ($_POST["password"]);
   $error;
   // Utilizar una consulta preparada para evitar inyección SQL
-  $stmt = $conexion->prepare("SELECT usuario, contrasena,rol FROM usuarios WHERE usuario = ?");
+  $stmt = $conexion->prepare("SELECT usuario, contrasena,rol FROM Usuarios WHERE usuario = ?");
   $stmt->bind_param("s", $usuario);
   $stmt->execute();
   $result = $stmt->get_result();
