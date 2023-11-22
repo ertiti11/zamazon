@@ -44,7 +44,7 @@ $stmtVaciarCesta->bind_param("i", $idCesta);
 $stmtVaciarCesta->execute();
 
 if ($stmtVaciarCesta->affected_rows > 0) {
-    $success = "Cesta vaciada correctamente.";
+    echo "<div class='alert alert-success' role='alert'>producto añadido correctamente</div>";
 } else {
     $error = "Error al vaciar la cesta: " . $stmtVaciarCesta->error;
 }

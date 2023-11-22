@@ -60,6 +60,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <?php require './components/navbar.php'; ?>
     <h2 class="text-center my-5">Cesta</h2>
+    <?php if (isset($success)) echo "<div class='alert alert-success' role='alert'>" . $success . "</div>" ?>
+
     <div style="display: flex; justify-content:center; align-items:center">
         <table class="table" style="width:33em">
             <thead>
@@ -102,14 +104,14 @@ WHERE pc.IdCesta = ?";
 
 
     ?>
-</body>
+<form method="POST" action="finalizar_pedido.php" style="width: 100%; display:flex; align-items: center; justify-content:center">
+    <input type="submit" class="btn btn-primary" value="Finalizar pedido">
+</form>
 <form method="post" style="width: 100%; display:flex; align-items: center; justify-content:center">
 
     <input type="submit" id="vaciarCesta" class="btn btn-danger" value="borrar cesta" />
 </form>
-<form method="POST" action="finalizar_pedido.php">
-    <input type="submit" value="Finalizar pedido">
-</form>
+</body>
 
 </html>
 
